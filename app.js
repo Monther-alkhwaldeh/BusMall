@@ -20,34 +20,45 @@ const names = [
     'water-can',
     'wine-glass'
 ];
+const extinsion = ['jpg', 'jpg', 'jpg', 'jpg', 'jpg', 'jpg', 'jpg', 'jpg', 'jpg', 'jpg', 'jpg', 'jpg', 'jpg','jpg', 'png','jpg', 'jpg', 'gif', 'jpg', 'jpg'];
 const leftimage = document.getElementById('left-image');
 const centerimage = document.getElementById('center-image');
 const rightimage = document.getElementById('right-image');
 const imagesection = document.getElementById('pselect')
-function product(name) {
+function product(name,extinsion) {
     this.name = name;
-    this.path = `./images/${name}.jpg`;
+    this.path = `./images/${name}.${extinsion}`;
     this.votes = 0;
     this.views = 0;
     product.all.push(this);
 }
 product.all = [];
 for (let i = 0; i < names.length; i++) {
-    new product(names[i]);
+    new product(names[i],extinsion[i]);
 }
 
 function render() {
     const leftIndex = randomNumber(0, product.all.length - 1);
+    const centerIndex = randomNumber(0, product.all.length - 1);
+    const rightIndex = randomNumber(0, product.all.length - 1);
+    if(leftIndex===centerIndex || leftIndex===rightIndex){
+         leftIndex = randomNumber(0, product.all.length - 1);
+    }
+    product.all[leftIndex].views++;
     leftimage.src = product.all[leftIndex].path;
     leftimage.alt = product.all[leftIndex].name;
     leftimage.title = product.all[leftIndex].name;
-
-    const centerIndex = randomNumber(0, product.all.length - 1);
+if(centerIndex===rightIndex || centerIndex===leftIndex){
+    centerIndex = randomNumber(0, product.all.length - 1);
+}
+    product.all[centerIndex].views++;
     centerimage.src = product.all[centerIndex].path;
     centerimage.alt = product.all[centerIndex].name;
     centerimage.title = product.all[centerIndex].name;
-
-    const rightIndex = randomNumber(0, product.all.length - 1);
+    if(rightIndex=== leftIndex || rightIndex === centerIndex){
+        rightIndex = randomNumber(0, product.all.length - 1);
+    }
+    product.all[rightIndex].views++;
     rightimage.src = product.all[rightIndex].path;
     rightimage.alt = product.all[rightIndex].name;
     rightimage.title = product.all[rightIndex].name;
@@ -59,11 +70,12 @@ function handleClick(event) {
         for (let i = 0; i < product.all.length; i++) {
             if (product.all[i].name === event.target.title) {
                 product.all[i].votes++;
-                stop--;    
+                stop--;   
              }
-             
+                   
+            }
         }
-    }
+       
     render();
     if (stop === 0) {
         pselect.removeEventListener('click', handleClick);
@@ -86,9 +98,9 @@ function listp() {
     }
 }
 
-// ----------------------------------------------
 function randomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+    
+            return Math.floor(Math.random() * (max - min + 1)) + min 
+           }
 
 render();  
