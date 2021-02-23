@@ -32,59 +32,73 @@ function product(name, extinsion) {
     this.views = 0;
     product.all.push(this);
 }
+
 product.all = [];
 for (let i = 0; i < names.length; i++) {
     new product(names[i], extinsion[i]);
 }
+render();
+
 
 function render() {
     let leftIndex = randomNumber(0, product.all.length - 1);
     let centerIndex = randomNumber(0, product.all.length - 1);
     let rightIndex = randomNumber(0, product.all.length - 1);
-    if (leftIndex === centerIndex || leftIndex === rightIndex) {
+    while (leftIndex === rightIndex || leftIndex === centerIndex) {
         leftIndex = randomNumber(0, product.all.length - 1);
-}
+        centerIndex = randomNumber(0, product.all.length - 1);
+        rightIndex = randomNumber(0, product.all.length - 1);
+    }
+
     product.all[leftIndex].views++;
     leftimage.src = product.all[leftIndex].path;
     leftimage.alt = product.all[leftIndex].name;
     leftimage.title = product.all[leftIndex].name;
-    if (centerIndex === rightIndex || centerIndex === leftIndex) {
+    while (centerIndex === rightIndex || centerIndex === leftIndex) {
+        leftIndex = randomNumber(0, product.all.length - 1);
         centerIndex = randomNumber(0, product.all.length - 1);
+        rightIndex = randomNumber(0, product.all.length - 1);
     }
+
     product.all[centerIndex].views++;
     centerimage.src = product.all[centerIndex].path;
     centerimage.alt = product.all[centerIndex].name;
     centerimage.title = product.all[centerIndex].name;
-    if (rightIndex === leftIndex || rightIndex === centerIndex) {
+    while (rightIndex === leftIndex || leftIndex === centerIndex) {
+        leftIndex = randomNumber(0, product.all.length - 1);
+        centerIndex = randomNumber(0, product.all.length - 1);
         rightIndex = randomNumber(0, product.all.length - 1);
     }
+
     product.all[rightIndex].views++;
     rightimage.src = product.all[rightIndex].path;
     rightimage.alt = product.all[rightIndex].name;
     rightimage.title = product.all[rightIndex].name;
 }
 pselect.addEventListener('click', handleClick);
+
 let stop = 25;
 function handleClick(event) {
+    event.preventDefault();
     if (event.target.id !== 'pselect') {
         for (let i = 0; i < product.all.length; i++) {
             if (product.all[i].name === event.target.title) {
                 product.all[i].votes++;
                 stop--;
             }
-
         }
     }
-
     render();
     if (stop === 0) {
+        localStorage.setItem("product", JSON.stringify(product.all));
         pselect.removeEventListener('click', handleClick);
-        listp();
-        createChart();
+
+        // listp();
+        // createChart();
     }
+
 }
 
-console.log(product.all);
 //  -------------------------------------------
 
 const conatiner = document.getElementById('list');
@@ -98,27 +112,28 @@ function listp() {
         li1.textContent = `"product name" ${product.all[i].name} "votes = "  ${product.all[i].votes} "views =" ${product.all[i].views}`;
     }
 }
+
 render();
+
 function randomNumber(min, max) {
 
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
-
 function createChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
 
     const productName = [];
     const productVotes = [];
-    const productViews=[];
+    const productViews = [];
     for (let i = 0; i < product.all.length; i++) {
         productName.push(product.all[i].name);
         productVotes.push(product.all[i].votes);
         productViews.push(product.all[i].views)
-        
+
     }
-new Chart(ctx, {
+    new Chart(ctx, {
         type: 'bar',
-        data: { 
+        data: {
             labels:
                 productName,
 
@@ -145,4 +160,6 @@ new Chart(ctx, {
         options: {},
     });
 }
-
+let ret = JSON.parse(localStorage.getItem("product"));
+listp();
+createChart();
