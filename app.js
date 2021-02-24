@@ -39,17 +39,23 @@ for (let i = 0; i < names.length; i++) {
 }
 
 function retrive() {
-    const products =JSON.parse(localStorage.getItem("product"));
-    if (products) {
-        // for(let i=0;i<products.length;i++){
-        // localStorage.setItem("product",JSON.stringify(product.all));
-        new product(products);
+        if(localStorage.length>0){
+            const pastVotes=JSON.parse(localStorage.getItem("productVotes"));
+            const pastViews=JSON.parse(localStorage.getItem("productViews"));
+            for(let i=0;i<product.all.length;i++){
+                votesI[i]+=pastVotes[i];
+                viewsI[i]+=pastViews[i];
+
+            }
+
+        }
+    // const products =JSON.parse(localStorage.getItem("product"));
+    // if (products) {
+    //     // for(let i=0;i<products.length;i++){
+    //     // localStorage.setItem("product",JSON.stringify(product.all));
+    //     new product(products);
     // }
 }
-}
-
-render();
-
 
 function render() {
     let leftIndex = randomNumber(0, product.all.length - 1);
@@ -101,11 +107,13 @@ function handleClick(event) {
     }
     render();
     if (stop === 0) {
-        localStorage.setItem("product", JSON.stringify(product.all));
+        createChart();
+        listp();
+        localStorage.removeItem("productVotes");
+        localStorage.removeItem("productViews");
+        localStorage.setItem("productVotes", JSON.stringify(votesI));
+        localStorage.setItem("productViews", JSON.stringify(viewsI));
         pselect.removeEventListener('click', handleClick);
-
-        // listp();
-        // createChart();
     }
 
 }
@@ -120,7 +128,7 @@ function listp() {
     for (let i = 0; i < product.all.length; i++) {
         const li1 = document.createElement('li');
         ul1.appendChild(li1);
-        li1.textContent = `"product name" ${product.all[i].name} "votes = "  ${product.all[i].votes} "views =" ${product.all[i].views}`;
+        li1.textContent = `"product name" ${product.all[i].name} "votes = "  ${votesI[i]} "views =" ${viewsI[i]}`;
     }
 }
 
@@ -130,23 +138,33 @@ function randomNumber(min, max) {
 
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
+const votesI=[];
+const viewsI=[];
+if(votesI.length<1){
+    for(let i=0;i <product.all.length;i++){
+        votesI.push(0);
+        viewsI.push(0);
+    }
+}
+
 function createChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
 
-    const productName = [];
-    const productVotes = [];
-    const productViews = [];
+    // const productName = [];
+    // const productVotes = [];
+    // const productViews = [];
     for (let i = 0; i < product.all.length; i++) {
-        productName.push(product.all[i].name);
-        productVotes.push(product.all[i].votes);
-        productViews.push(product.all[i].views)
+        
+        votesI[i]+=product.all[i].votes;
+        viewsI[i]+=product.all[i].views;
 
     }
     new Chart(ctx, {
         type: 'bar',
         data: {
             labels:
-                productName,
+                names,
 
             datasets: [
                 {
@@ -155,7 +173,7 @@ function createChart() {
                     label: '# of votes:',
                     backgroundColor: 'rgb(255,0,0)',
                     borderColor: 'rgb(0, 0, 0)',
-                    data: productVotes,
+                    data: votesI,
                 },
                 {
                     barPercentage: 1.0,
@@ -163,7 +181,7 @@ function createChart() {
                     label: '# of views:',
                     backgroundColor: 'rgb(255,0,0)',
                     borderColor: 'rgb(0, 0, 0)',
-                    data: productViews,
+                    data: viewsI,
                 },
             ],
         },
@@ -173,6 +191,6 @@ function createChart() {
 }
 // product.all=ret;
 retrive();
-listp();
-createChart();
+// listp();
+// createChart();
 // render();
