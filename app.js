@@ -37,6 +37,17 @@ product.all = [];
 for (let i = 0; i < names.length; i++) {
     new product(names[i], extinsion[i]);
 }
+
+function retrive() {
+    const products =JSON.parse(localStorage.getItem("product"));
+    if (products) {
+        // for(let i=0;i<products.length;i++){
+        // localStorage.setItem("product",JSON.stringify(product.all));
+        new product(products);
+    // }
+}
+}
+
 render();
 
 
@@ -160,6 +171,8 @@ function createChart() {
         options: {},
     });
 }
-let ret = JSON.parse(localStorage.getItem("product"));
+// product.all=ret;
+retrive();
 listp();
 createChart();
+// render();
