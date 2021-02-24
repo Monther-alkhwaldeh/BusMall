@@ -1,0 +1,42 @@
+body {
+    background:whitesmoke;
+  }
+  header {
+    text-align: center;
+    border: 5px solid #C89737;
+    color: black;;
+    margin-bottom: 40px;
+  }
+  header nav ul {
+    list-style: none;
+  }
+  header nav ul li {
+    display: inline-block;
+    padding: 10px;
+  }
+  header nav ul li a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 25px;
+    font-weight: 100;
+  }
+  header nav ul li a:hover {
+    color: #C89737;
+  }
+  #pselect {
+    max-width: 90%;
+    margin: 0 auto;
+    text-align: center;
+  }
+  img {
+    width: 300px;
+    height: 300px;
+    border: 10px solid #C89737;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+  }
+  #myChart{
+width: 50px;
+    height: 10px;
+  }
